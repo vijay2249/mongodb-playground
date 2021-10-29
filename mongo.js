@@ -99,7 +99,10 @@ async function main() {
     // )
 
     // updateMany operation
-    await updateManyOperation(client)
+    // await updateManyOperation(client)
+
+    // delete - deleteOne operation
+    await deleteOneOperation(client, {stock: 100});
 
   }catch(e){
     console.log(e);
@@ -111,6 +114,12 @@ async function main() {
 }
 // any errors on running the main function the console log the errors
 main().catch(console.dir);
+
+// delete - deleteOne operation
+async function deleteOneOperation(client, filter){
+  const result = await client.db("new_db").collection("youtube").deleteOne({stock: {$gt: filter.stock}})
+  console.log(`${result.deletedCount} documents are deleted as per query`);
+}
 
 // update - updateMany operation
 async function updateManyOperation(client){
