@@ -13,7 +13,17 @@ async function main() {
   try{
     await client.connect();
     console.log("Connection success");
-    await listDatabasesIn(client); //get the list of the databases 
+    
+    // await listDatabasesIn(client); //get the list of the databases 
+
+    // create operation
+    await createNewListing(client, {
+      _id: 1,
+      name: 'viz',
+      work: 'learning mongodb',
+      from: 'youtube official channel'
+    })
+
   }catch(e){
     console.log(e);
   }
@@ -25,8 +35,22 @@ async function main() {
 // any errors on running the main function the console log the errors
 main().catch(console.dir);
 
+// create operation
+async function createNewListing(client, newList){
+  const result = await client.db("new_db").collection("youtube").insertOne(newList)
+  console.log(`new data inserted with id: ${result.insertedId}`);
+
+}
+
+async function insertManyOperation(client, manyList){
+  
+}
+
+// list all the databases in the user
 async function listDatabasesIn(client){
   const databasesList = await client.db().admin().listDatabases();
-  console.log(databasesList.databases);
   // this return array of objects with database name and size and isempty parameter to each database
+  databasesList.databases.forEach(db =>{
+    console.log(db.name);
+  })
 }
