@@ -71,12 +71,23 @@ async function main() {
     // await findOneOperation(client, {name: 'pen'}) //result yes
     // await findOneOperation(client, {name: 'vijay'}) //result none
 
-    // read - find operation
-    await findOperation(client, {
-      minimumPrice: 2,
-      maximumStock: 300,
-      limit: 2
-    })
+    // // read - find operation
+    // await findOperation(client, {
+    //   minimumPrice: 2,
+    //   maximumStock: 300,
+    //   limit: 2
+    // })
+
+    // update - updateOne operation
+    await updateOneOperation(client,
+      {
+        minimumPrice: 2
+      },
+      {
+        stock: 0,
+        isAvailable: false
+      }
+    )
 
   }catch(e){
     console.log(e);
@@ -89,8 +100,26 @@ async function main() {
 // any errors on running the main function the console log the errors
 main().catch(console.dir);
 
-// read - find
+// update - updateOne operation
+async function updateOneOperation(client, filter, newData){
+  const results = await client.db("new_db").collection("youtube").updateOne(
+    {
+      price: {$gte: filter.minimunPrice}
+      // name: filter.name
+    },
+    {
+      $set: newData
+    }
+  )
+  console.log(`${results.matchedCount} documents follows the criteria`);
+  console.log(`${results.modifiedCount} documents were changed`);
+  findOperation(client, filter)
+}
+
+// read - find operation
 async function findOperation(client, query){
+  if(query.maximumStock === undefined)query.maximumStock = 0;
+  if(query.limit === undefined)query.limit = Number.MAX_SAFE_INTEGER;
   const cursor = await client.db("new_db").collection("youtube").find({
     price: {$gte: query.minimumPrice},
     stock: {$lte: query.maximumStock}
