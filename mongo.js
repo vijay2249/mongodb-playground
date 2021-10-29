@@ -16,13 +16,59 @@ async function main() {
     
     // await listDatabasesIn(client); //get the list of the databases 
 
-    // create operation
-    await createNewListing(client, {
-      _id: 1,
-      name: 'viz',
-      work: 'learning mongodb',
-      from: 'youtube official channel'
-    })
+    // create operation - insertOne operation
+    // await createNewListing(client, {
+    //   _id: 1,
+    //   name: 'viz',
+    //   work: 'learning mongodb',
+    //   from: 'youtube official channel'
+    // })
+
+    // create operation - insertMany operation
+    // await insertManyOperation(client, [
+    //   {
+    //     _id: 2,
+    //     name: "pen",
+    //     price: 1.5,
+    //     stock: 300,
+    //     rating: 3
+    //   },
+    //   {
+    //     _id: 3,
+    //     name: "paper",
+    //     price: 1,
+    //     stock: 200,
+    //     rating: 5
+    //   },
+    //   {
+    //     _id: 4,
+    //     name: "rubber",
+    //     price: 10,
+    //     stock: 10,
+    //     rating: 1,
+    //     review: [
+    //       {
+    //         authorName: 'a',
+    //         review: 'good work'
+    //       },
+    //       {
+    //         authorName: "b",
+    //         review: 'bad one though'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     _id: 5,
+    //     name: "scissor",
+    //     price: 15.2,
+    //     stock: 30,
+    //     rating: 10,
+    //     author: 'Hello there'
+    //   }
+    // ])
+
+    // read - findOne operation
+    await findOneOperation(client, {name: 'vijay'})
 
   }catch(e){
     console.log(e);
@@ -35,15 +81,29 @@ async function main() {
 // any errors on running the main function the console log the errors
 main().catch(console.dir);
 
-// create operation
+// read - findOne operation
+async function findOneOperation(client, query){
+  const results = await client.db("new_db").collection("youtube").findOne({name: query.name})
+  if(results){
+    console.log(`Found data with the name ${query.name}`);
+    console.log(results);
+  }else{
+    console.log(`There is no record with the name ${query.name}`);
+  }
+}
+
+// create operation - insertOne operation
 async function createNewListing(client, newList){
   const result = await client.db("new_db").collection("youtube").insertOne(newList)
   console.log(`new data inserted with id: ${result.insertedId}`);
 
 }
 
+// create - insertMany operation
 async function insertManyOperation(client, manyList){
-  
+  const result = await client.db("new_db").collection("youtube").insertMany(manyList);
+  console.log(`${result.insertedCount} number of items are added to the database`);
+  console.log(result.insertedIds);
 }
 
 // list all the databases in the user
