@@ -90,13 +90,16 @@ async function main() {
     // )
 
     // upsert operation
-    await upsertOperation(client,
-      {name: 'unknown'},
-      {
-        stock: 0,
-        isAvailable: false
-      }
-    )
+    // await upsertOperation(client,
+    //   {name: 'unknown'},
+    //   {
+    //     stock: 0,
+    //     isAvailable: false
+    //   }
+    // )
+
+    // updateMany operation
+    await updateManyOperation(client)
 
   }catch(e){
     console.log(e);
@@ -108,6 +111,17 @@ async function main() {
 }
 // any errors on running the main function the console log the errors
 main().catch(console.dir);
+
+// update - updateMany operation
+async function updateManyOperation(client){
+  const result = await client.db("new_db").collection("youtube").updateMany(
+    {author: {$exists: false}},
+    {$set: {author: 'This is unknown'}}
+  )
+
+  console.log(`${result.matchedCount} documents matched the query`);
+  console.log(`${result.modifiedCount} documents are modified as per query`);
+}
 
 // upsert operation
 async function upsertOperation(client, filter, newData){
