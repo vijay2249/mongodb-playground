@@ -68,7 +68,15 @@ async function main() {
     // ])
 
     // read - findOne operation
-    await findOneOperation(client, {name: 'vijay'})
+    // await findOneOperation(client, {name: 'pen'}) //result yes
+    // await findOneOperation(client, {name: 'vijay'}) //result none
+
+    // read - find operation
+    await findOperation(client, {
+      minimumPrice: 2,
+      maximumStock: 300,
+      limit: 2
+    })
 
   }catch(e){
     console.log(e);
@@ -80,6 +88,23 @@ async function main() {
 }
 // any errors on running the main function the console log the errors
 main().catch(console.dir);
+
+// read - find
+async function findOperation(client, query){
+  const cursor = await client.db("new_db").collection("youtube").find({
+    price: {$gte: query.minimumPrice},
+    stock: {$lte: query.maximumStock}
+  }).sort({price: -1})
+    .limit(query.limit)
+  
+  const results = await cursor.toArray();
+  if(results.length > 0){
+    console.log(`Found the records that match the given conditions`);
+    console.log(results);
+  }else{
+    console.log("Found none records that match the given contitions in the database");
+  }
+}
 
 // read - findOne operation
 async function findOneOperation(client, query){
