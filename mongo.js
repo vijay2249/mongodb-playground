@@ -79,10 +79,19 @@ async function main() {
     // })
 
     // update - updateOne operation
-    await updateOneOperation(client,
-      {
-        minimumPrice: 2
-      },
+    // await updateOneOperation(client,
+    //   {
+    //     minimumPrice: 2
+    //   },
+    //   {
+    //     stock: 0,
+    //     isAvailable: false
+    //   }
+    // )
+
+    // upsert operation
+    await upsertOperation(client,
+      {name: 'unknown'},
       {
         stock: 0,
         isAvailable: false
@@ -99,6 +108,19 @@ async function main() {
 }
 // any errors on running the main function the console log the errors
 main().catch(console.dir);
+
+// upsert operation
+async function upsertOperation(client, filter, newData){
+  const result = await client.db("new_db").collection("youtube").updateOne(
+    {name: filter.name}, {$set: newData}, {upsert: true}
+  )
+  console.log(`${result.matchedCount} documents follows the criteria`);
+  if(result.upsertedCount > 0){
+    console.log(`one document was inserted with id: ${result.upsertedId}`);
+  }else{
+    console.log(`${result.modifiedCount} documents are updated`);
+  }
+}
 
 // update - updateOne operation
 async function updateOneOperation(client, filter, newData){
