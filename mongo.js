@@ -113,7 +113,6 @@ async function updateOneOperation(client, filter, newData){
   )
   console.log(`${results.matchedCount} documents follows the criteria`);
   console.log(`${results.modifiedCount} documents were changed`);
-  findOperation(client, filter)
 }
 
 // read - find operation
