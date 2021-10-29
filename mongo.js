@@ -105,7 +105,7 @@ async function main() {
     // await deleteOneOperation(client, {stock: 100});
 
     // delete - deleteMany operation
-    await deleteManyOperation(client, {stock: 50})
+    // await deleteManyOperation(client, {stock: 50})
 
   }catch(e){
     console.log(e);
